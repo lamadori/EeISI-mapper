@@ -81,8 +81,8 @@ public class Cen2PeppolBis extends AbstractFromCenConverter {
             Resource ublSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-peppol.schematron1"));
             Resource cenSchemaFile = drl.getResource(this.configuration.getMandatoryString("eigor.converter.cen-peppol.schematron2"));
             boolean schematronAutoUpdate = "true".equals(this.configuration.getMandatoryString("eigor.converter.cen-peppol.schematron.auto-update-xslt"));
-            peppolCenValidator = new CiusSchematronValidator(new FileSystemResource(ublSchemaFile.getFile()), true, schematronAutoUpdate, ErrorCode.Location.PEPPOL_OUT);
-            peppolUblValidator = new SchematronValidator(new FileSystemResource(cenSchemaFile.getFile()), true, schematronAutoUpdate, ErrorCode.Location.PEPPOL_OUT);
+            peppolCenValidator = new CiusSchematronValidator(ublSchemaFile, true, schematronAutoUpdate, ErrorCode.Location.PEPPOL_OUT);
+            peppolUblValidator = new SchematronValidator(cenSchemaFile, true, schematronAutoUpdate, ErrorCode.Location.PEPPOL_OUT);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while loading configuring " + this + ".", e);
         }
