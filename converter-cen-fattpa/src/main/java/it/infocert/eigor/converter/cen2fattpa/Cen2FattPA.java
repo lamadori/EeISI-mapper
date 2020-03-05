@@ -87,7 +87,7 @@ public class Cen2FattPA extends AbstractFromCenConverter {
         Resource fieldLengthsFile = getResourceLoader().getResource(pathOfFieldLengths);
 
         try {
-            fieldLengthEnforcer = new FieldLengthEnforcer(fieldLengthsFile.getInputStream(), ErrorCode.Location.FATTPA_OUT);
+            fieldLengthEnforcer = new FieldLengthEnforcer(fieldLengthsFile, ErrorCode.Location.FATTPA_OUT);
         } catch (Exception e) {
             throw new ConfigurationException("An error occurred while configuring '" + this + "'.", e);
         }
