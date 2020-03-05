@@ -4,6 +4,8 @@ import it.infocert.eigor.api.ConversionIssue;
 import it.infocert.eigor.api.ConversionResult;
 import it.infocert.eigor.api.IConversionIssue;
 import it.infocert.eigor.api.errors.ErrorCode;
+import it.infocert.eigor.org.springframework.core.io.Resource;
+
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.jdom2.Document;
@@ -28,7 +30,7 @@ public class FieldLengthEnforcer {
     private final Map<String, Integer> lengthsMap;
     private final ErrorCode.Location callingLocation;
 
-    public FieldLengthEnforcer(File file, ErrorCode.Location callingLocation) {
+    public FieldLengthEnforcer(Resource file, ErrorCode.Location callingLocation) {
         this.lengthsMap = loadFieldLengthsMap(file);
         this.callingLocation = callingLocation;
     }
@@ -136,13 +138,13 @@ public class FieldLengthEnforcer {
         return doc;
     }
 
-    private Map<String, Integer> loadFieldLengthsMap(File file) {
+    private Map<String, Integer> loadFieldLengthsMap(Resource file) {
         TreeMap<String, Integer> map = new TreeMap<>();
         Properties properties = new Properties();
         try {
-            FileInputStream fileInputStream = null;
+            InputStream fileInputStream = null;
             try {
-                fileInputStream = new FileInputStream(file);
+                fileInputStream = file.getInputStream();
                 properties.load(fileInputStream);
                 for (String key : properties.stringPropertyNames()) {
                     String property = properties.getProperty(key);
