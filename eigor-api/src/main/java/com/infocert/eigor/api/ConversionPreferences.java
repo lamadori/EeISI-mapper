@@ -4,15 +4,18 @@ public final class ConversionPreferences {
 
     private Boolean forceConversion;
     private boolean intermediateValidation;
+    private boolean skipDefaultCallbacks;
 
     public ConversionPreferences() {
         forceConversion = null;
         intermediateValidation = false;
+        skipDefaultCallbacks = false;
     }
 
     private ConversionPreferences(Boolean forceConversion, boolean intermediateValidation) {
         this.forceConversion = forceConversion;
         this.intermediateValidation = intermediateValidation;
+        this.skipDefaultCallbacks = false;
     }
 
     /**
@@ -49,5 +52,14 @@ public final class ConversionPreferences {
 
     public boolean validateIntermediateCen() {
         return intermediateValidation;
+    }
+    
+    public boolean isSkipDefaultCallbacks() {
+        return skipDefaultCallbacks;
+    }
+
+    public ConversionPreferences withSkipDefaultCallbacks() {
+        skipDefaultCallbacks = true;
+        return this;
     }
 }
