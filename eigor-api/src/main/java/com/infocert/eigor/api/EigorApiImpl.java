@@ -85,13 +85,6 @@ public class EigorApiImpl implements EigorApi {
             log.warn("Can't read invoice");
         }
 
-        String stringAsDate = new SimpleDateFormat(FULL_DATE).format(new Date());
-
-        String folderName = String.format("conversion-%s-%s-%s-%s", stringAsDate, effectiveSourceFormat, targetFormat, (int) (Math.random() * 100000));
-        File outputFolderForThisTransformation = new File(builder.getOutputFolderFile(), folderName);
-        outputFolderForThisTransformation.mkdirs();
-
-
         // this retrieves the converters from the relate repository, it is likely the "format" values
         // would come from a different software module, i.e. the GUI.
         ToCenConversion toCen = checkNotNull(
@@ -104,12 +97,22 @@ public class EigorApiImpl implements EigorApi {
                 "Target format '%s' not supported. Available formats are %s", targetFormat, builder.getConversionRepository().supportedFromCenFormats());
         log.debug("Converting CEN to output as '{}' using converter '{}'.", targetFormat, fromCen.getClass().getName());
 
-        ArrayList<ConversionCallback> fullListOfCallbacks = Lists.newArrayList(
-                new DebugConversionCallback(outputFolderForThisTransformation),
-                new DumpIntermediateCenInvoiceAsCenXmlCallback(outputFolderForThisTransformation, builder.getCen2XmlCen(), false),
-                new DumpIntermediateCenInvoiceAsCsvCallback(outputFolderForThisTransformation)
+        ArrayList<ConversionCallback> fullListOfCallbacks;
+        if (preferences.isSkipDefaultCallbacks()) {
+            fullListOfCallbacks = new ArrayList<>();
+        }
+        else {
+            String stringAsDate = new SimpleDateFormat(FULL_DATE).format(new Date());
+            String folderName = String.format("conversion-%s-%s-%s-%s", stringAsDate, effectiveSourceFormat, targetFormat, (int) (Math.random() * 100000));
+            File outputFolderForThisTransformation = new File(builder.getOutputFolderFile(), folderName);
+            outputFolderForThisTransformation.mkdirs();
 
-        );
+            fullListOfCallbacks = Lists.newArrayList(
+                    new DebugConversionCallback(outputFolderForThisTransformation),
+                    new DumpIntermediateCenInvoiceAsCenXmlCallback(outputFolderForThisTransformation, builder.getCen2XmlCen(), false),
+                    new DumpIntermediateCenInvoiceAsCsvCallback(outputFolderForThisTransformation)
+            );
+        }
         if (callbacks != null && callbacks.length > 0) {
             fullListOfCallbacks.addAll(Arrays.asList(callbacks));
         }
